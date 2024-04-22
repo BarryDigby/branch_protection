@@ -8,6 +8,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+        pull-requests: write
     steps:
       # PRs to the main branch are only OK if they are coming from he QA branch
       - name: Check PRs
