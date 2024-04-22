@@ -8,7 +8,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Not be able to configure pfizer repo settings, must declare read + write access below
     permissions:
+        issues: write
         pull-requests: write
     steps:
       # PRs to the main branch are only OK if they are coming from he QA branch
