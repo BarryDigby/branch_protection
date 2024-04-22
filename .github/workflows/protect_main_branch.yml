@@ -1,6 +1,7 @@
 name: main branch protection
 # This workflow is triggered on PRs to main branch on the repository
 # It fails when someone tries to make a PR against the main branch from a branch other than QA
+# Permissions (R&W) must be set by the organisation - cannot set via the workflow
 on:
   pull_request_target:
     branches: [main]
@@ -8,10 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    # Not be able to configure pfizer repo settings, must declare read + write access below
-    permissions:
-        issues: write
-        pull-requests: write
     steps:
       # PRs to the main branch are only OK if they are coming from he QA branch
       - name: Check PRs
@@ -23,7 +20,7 @@ jobs:
       # NOTE - this doesn't currently work if the PR is coming from a fork, due to limitations in GitHub actions secrets
       - name: Post PR comment
         if: failure()
-        uses: mshick/add-pr-comment@v1
+        uses: mshick/add-pr-comment@v2
         with:
           message: |
             ## This PR is against the `main` branch :x:
