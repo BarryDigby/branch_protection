@@ -14,27 +14,28 @@ jobs:
         id: checks
         if: github.repository == 'BarryDigby/branch_protection'
         run: |
+            # Identify the target branch and the incoming branch
             target_branch="${{ github.event.pull_request.base.ref }}"
             incoming_branch="${{ github.event.pull_request.head.ref }}"
 
-            declare -A branch_array=( ["main"]="QA" ["QA"]="DEV" ["DEV"]="DEV_*" )
-            expected_incoming_branch=${branch_array["$target_branch"]}
-            recommended_target_branch=""
-            
-            for branch in "${!branch_array[@]}"; do
-                if [[ "$incoming_branch" == "${branch_array[$branch]}" ]]; then
-                    recommended_target_branch="$branch"
-                fi
-            done
+            # Declare an array to figure out what the expected incoming branch should be based on the target branch
+            declare -A target_branch_array=( ["main"]="QA" ["QA"]="DEV" ["DEV"]="DEV_*" )
+            expected_incoming_branch=${target_branch_array["$target_branch"]}
 
-            echo "The name of the incoming branch is: $incoming_branch"
-            echo "The name of the target branch is: $target_branch"
-            echo "The expected incoming branch for the target branch is: $expected_incoming_branch"
-            echo "The recommended target branch for the incoming branch is: $recommended_target_branch"
+            # Based on the incoming branch, figure out what the recommended target branch should be
+            # Branches that are not named "QA", "DEV", or "DEV_*" should be told to rename as "DEV_*" and push to DEV
+            declare -A incoming_branch_array=( ["QA"]="main" ["DEV"]="QA" ["DEV_*"]="DEV" )
+            recommended_target_branch=${incoming_branch_array["$incoming_branch"]}
+            logger_error=""
+            if [[ -z "$recommended_target_branch" ]]; then
+                logger_error="The incoming branch ("${incoming_branch}") does not match the naming conventions specified. Please rename as DEV_{user.initials} and push to the `DEV` branch."
+            fi
 
             echo "::set-output name=INCOMING_BRANCH::$incoming_branch"
             echo "::set-output name=TARGET_BRANCH::$target_branch"
-            echo "::set-output name=EXPECTED_BRANCH::$expected_branch"
+            echo "::set-output name=EXPECTED_INCOMING_BRANCH::$expected_incoming_branch"
+            echo "::set-output name=RECOMMENDED_TARGET_BRANCH::$recommended_target_branch"
+            echo "::set-output name=LOGGER_ERROR::$logger_error"
           
             { [[ ${{github.event.pull_request.head.repo.full_name }} == BarryDigby/branch_protection ]] && [[ "$incoming_branch" == "$expected_incoming_branch" ]]; }
 
@@ -48,7 +49,7 @@ jobs:
             ## This PR is against the `${{ steps.checks.outputs.TARGET_BRANCH }}` branch :x:
 
             * Do not close this PR
-            * Click _Edit_ and change the `base` to `${{ steps.checks.outputs.EXPECTED_BRANCH }}`
+            * Click _Edit_ and change the `base` to `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}`
             * This CI test will remain failed until you push a new commit
 
             ---
@@ -56,10 +57,12 @@ jobs:
             Hi @${{ github.event.pull_request.user.login }},
 
             It looks like this pull-request is has been made against the [${{ github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `${{ steps.checks.outputs.TARGET_BRANCH }}` branch.
-            The `${{ steps.checks.outputs.TARGET_BRANCH }}` branch should always contain code from the `${{ steps.checks.outputs.EXPECTED_BRANCH }}` branch.
-            Because of this, PRs to `${{ steps.checks.outputs.TARGET_BRANCH }}` are only allowed if they come from the [${{ github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `${{ steps.checks.outputs.EXPECTED_BRANCH }}` branch.
+            The `${{ steps.checks.outputs.TARGET_BRANCH }}` branch should always contain code from the `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}` branch.
+            Because of this, PRs to `${{ steps.checks.outputs.TARGET_BRANCH }}` are only allowed if they come from the [${{ github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}` branch.
+            
+            In your scenario, the `${{ steps.checks.outputs.INCOMING_BRANCH }}` branch should be pushed to the `${{ steps.checks.outputs.RECOMMENDED_TARGET_BRANCH }}` branch. 
 
-            You do not need to close this PR, you can change the target branch to `${{ steps.checks.outputs.EXPECTED_BRANCH }}` by clicking the _"Edit"_ button at the top of this page.
+            You do not need to close this PR, you can change the target branch to `${{ steps.checks.outputs.RECOMMENDED_TARGET_BRANCH }}` by clicking the _"Edit"_ button at the top of this page.
             Note that even after this, the test will continue to show as failing until you push a new commit.
 
             Thanks again for your contribution!
