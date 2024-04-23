@@ -33,7 +33,7 @@ jobs:
         uses: mshick/add-pr-comment@v2.8.2
         with:
           message: |
-            ## This PR is against the `${{steps.checks.outputs.TARGET_BRANCH}}` branch :x:
+            ## This PR is against the `"${{steps.checks.outputs.TARGET_BRANCH}}"` branch :x:
 
             * Do not close this PR
             * Click _Edit_ and change the `base` to `${{steps.checks.outputs.EXPECTED_BRANCH}}`
