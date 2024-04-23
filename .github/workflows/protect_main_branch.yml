@@ -23,7 +23,6 @@ jobs:
           echo "::set-output name=TARGET_BRANCH::$target_branch"
           echo "::set-output name=EXPECTED_BRANCH::$expected_branch"
         
-
           { [[ ${{github.event.pull_request.head.repo.full_name }} == BarryDigby/branch_protection ]] && [[ "$incoming_branch" == "$expected_branch" ]]; }
 
       # If the above check failed, post a comment on the PR explaining the failure
