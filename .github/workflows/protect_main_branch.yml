@@ -19,9 +19,10 @@ jobs:
           target_branch="${{ github.event.pull_request.base.ref }}"
           expected_branch=${branch_map["$target_branch"]}
 
-          echo "INCOMING_BRANCH=${incoming_branch}" >> "$GITHUB_OUTPUT"
-          echo "TARGET_BRANCH=${target_branch}" >> "$GITHUB_OUTPUT"
-          echo "EXPECTED_BRANCH=${expected_branch}" >> "$GITHUB_OUTPUT"
+          echo "::set-output name=INCOMING_BRANCH::$incoming_branch"
+          echo "::set-output name=TARGET_BRANCH::$target_branch"
+          echo "::set-output name=EXPECTED_BRANCH::$expected_branch"
+        
 
           { [[ ${{github.event.pull_request.head.repo.full_name }} == BarryDigby/branch_protection ]] && [[ "$incoming_branch" == "$expected_branch" ]]; }
 
