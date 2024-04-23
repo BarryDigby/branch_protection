@@ -19,8 +19,8 @@ jobs:
           declare -A branch_array=( ["main"]="QA" ["QA"]="DEV" ["DEV"]="DEV_*" )
           expected_incoming_branch=${branch_map["$target_branch"]}
 
-          for key in "${!branch_map[@]}"; do
-              if [[ "${branch_map[$key]}" = "${expected_branch}" ]]; then
+          for key in "${!branch_array[@]}"; do
+              if [[ "${branch_array[$key]}" = "${expected_branch}" ]]; then
                   recommended_target_branch=$key
               fi
           done
