@@ -2,4 +2,4 @@
 
 create a PR from QA -> main
 
-trigger an error trying to merge from branch other than QA to main
+trigger an error trying to merge from 'trigger_error' to main.
