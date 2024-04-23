@@ -29,6 +29,10 @@ jobs:
             * Click _Edit_ and change the `base` to `QA`
             * This CI test will remain failed until you push a new commit
 
+            testing some regex here:
+            It looks like you are pushing from the branch: ${{ github.event.pull_request.head.ref }}
+            
+
             ---
 
             Hi @${{ github.event.pull_request.user.login }},
