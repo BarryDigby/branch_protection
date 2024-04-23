@@ -9,8 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    permissions:
-        pull-requests: write
     steps:
       - name: Check PRs
         id: checks
@@ -23,9 +21,9 @@ jobs:
 
           { [[ ${{github.event.pull_request.head.repo.full_name }} == BarryDigby/branch_protection ]] && [[ "$incoming_branch" == "$expected_branch" ]]; }
 
-          echo "INCOMING_BRANCH=$incoming_branch" >> $GITHUB_OUTPUT
-          echo "TARGET_BRANCH=$target_branch" >> $GITHUB_OUTPUT
-          echo "EXPECTED_BRANCH=$expected_branch" >> $GITHUB_OUTPUT
+          echo "INCOMING_BRANCH=${incoming_branch}" >> $GITHUB_OUTPUT
+          echo "TARGET_BRANCH=${target_branch}" >> $GITHUB_OUTPUT
+          echo "EXPECTED_BRANCH=${expected_branch}" >> $GITHUB_OUTPUT
         
 
       # If the above check failed, post a comment on the PR explaining the failure
