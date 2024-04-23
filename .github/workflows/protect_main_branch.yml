@@ -20,10 +20,11 @@ jobs:
             declare -A branch_array=( ["main"]="QA" ["QA"]="DEV" ["DEV"]="DEV_*" )
             expected_incoming_branch=${branch_array["$target_branch"]}
             recommended_target_branch=""
-            for key in "${!branch_array[@]}"; do
-              if [[ "${branch_array[$key]}" = "${expected_incoming_branch}" ]]; then
-                recommended_target_branch=$key
-              fi
+            
+            for branch in "${!branch_array[@]}"; do
+                if [[ "$incoming_branch" == "${branch_array[$branch]}" ]]; then
+                    recommended_target_branch="$branch"
+                fi
             done
 
             echo "The name of the incoming branch is: $incoming_branch"
