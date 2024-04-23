@@ -31,11 +31,11 @@ jobs:
             echo "The expected incoming branch for the target branch is: $expected_incoming_branch"
             echo "The recommended target branch for the incoming branch is: $recommended_target_branch"
 
-          echo "::set-output name=INCOMING_BRANCH::$incoming_branch"
-          echo "::set-output name=TARGET_BRANCH::$target_branch"
-          echo "::set-output name=EXPECTED_BRANCH::$expected_branch"
-        
-          { [[ ${{github.event.pull_request.head.repo.full_name }} == BarryDigby/branch_protection ]] && [[ "$incoming_branch" == "$expected_incoming_branch" ]]; }
+            echo "::set-output name=INCOMING_BRANCH::$incoming_branch"
+            echo "::set-output name=TARGET_BRANCH::$target_branch"
+            echo "::set-output name=EXPECTED_BRANCH::$expected_branch"
+          
+            { [[ ${{github.event.pull_request.head.repo.full_name }} == BarryDigby/branch_protection ]] && [[ "$incoming_branch" == "$expected_incoming_branch" ]]; }
 
       # If the above check failed, post a comment on the PR explaining the failure
       # NOTE - this doesn't currently work if the PR is coming from a fork, due to limitations in GitHub actions secrets
