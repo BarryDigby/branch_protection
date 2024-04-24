@@ -49,9 +49,7 @@ jobs:
           message: |
             ## This PR is against the `${{ steps.checks.outputs.TARGET_BRANCH }}` branch :x:
             
-              ${{ steps.checks.outputs.LOGGER_ERROR }}
-            
-            ---
+            ${{ steps.checks.outputs.LOGGER_ERROR }}
 
             * Do not close this PR
             * Click _Edit_ and change the `base` to `${{ steps.checks.outputs.RECOMMENDED_TARGET_BRANCH }}`
@@ -60,8 +58,6 @@ jobs:
             ---
 
             Hi @${{ github.event.pull_request.user.login }},
-
-            ${{ steps.checks.outputs.LOGGER_ERROR }}
             
             It looks like this pull-request is has been made against the [${{ github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `${{ steps.checks.outputs.TARGET_BRANCH }}` branch.
             The `${{ steps.checks.outputs.TARGET_BRANCH }}` branch should always contain code from the `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}` branch.
