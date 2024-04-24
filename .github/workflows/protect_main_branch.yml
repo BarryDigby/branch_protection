@@ -28,7 +28,8 @@ jobs:
             recommended_target_branch=${incoming_branch_array["$incoming_branch"]}
             logger_error=""
             if [[ -z "$recommended_target_branch" ]]; then
-              logger_error="* :warning: The incoming branch (\`"${incoming_branch}"\`) does not match the naming conventions specified for local \`DEV\` branches. Please rename as \`DEV_${user_initials}\` (i.e \`DEV_BD\`)."
+              recommended_target_branch="DEV"
+              logger_error="> :warning: The incoming branch \`"${incoming_branch}"\` does not match the naming conventions specified for local \`DEV\` branches. Please rename as \`DEV_{user_initials}\` (i.e \`DEV_BD\`)."
             fi
 
             echo "::set-output name=INCOMING_BRANCH::$incoming_branch"
@@ -47,7 +48,11 @@ jobs:
         with:
           message: |
             ## This PR is against the `${{ steps.checks.outputs.TARGET_BRANCH }}` branch :x:
-            ${{ steps.checks.outputs.LOGGER_ERROR }}
+            
+              ${{ steps.checks.outputs.LOGGER_ERROR }}
+            
+            ---
+
             * Do not close this PR
             * Click _Edit_ and change the `base` to `${{ steps.checks.outputs.RECOMMENDED_TARGET_BRANCH }}`
             * This CI test will remain failed until you push a new commit
