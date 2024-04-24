@@ -26,9 +26,9 @@ jobs:
             # Branches that are not named "QA", "DEV", or "DEV_*" should be told to rename as "DEV_*" and push to DEV
             declare -A incoming_branch_array=( ["QA"]="main" ["DEV"]="QA" ["DEV_*"]="DEV" )
             recommended_target_branch=${incoming_branch_array["$incoming_branch"]}
-            logger_error="In your scenario, the \`${incoming_branch}\` branch should be pushed to the \`${recommended_target_branch}\` branch."
+            logger_error=""
             if [[ -z "$recommended_target_branch" ]]; then
-              logger_error="The incoming branch ("${incoming_branch}") does not match the naming conventions specified. Please rename as DEV_{user.initials} and push to the \`DEV\` branch."
+              logger_error="* :warning: The incoming branch (\`"${incoming_branch}"\`) does not match the naming conventions specified for local \`DEV\` branches. Please rename as \`DEV_${user_initials}\` (i.e \`DEV_BD\`)."
             fi
 
             echo "::set-output name=INCOMING_BRANCH::$incoming_branch"
@@ -47,20 +47,20 @@ jobs:
         with:
           message: |
             ## This PR is against the `${{ steps.checks.outputs.TARGET_BRANCH }}` branch :x:
-
+            ${{ steps.checks.outputs.LOGGER_ERROR }}
             * Do not close this PR
-            * Click _Edit_ and change the `base` to `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}`
+            * Click _Edit_ and change the `base` to `${{ steps.checks.outputs.RECOMMENDED_TARGET_BRANCH }}`
             * This CI test will remain failed until you push a new commit
 
             ---
 
             Hi @${{ github.event.pull_request.user.login }},
 
+            ${{ steps.checks.outputs.LOGGER_ERROR }}
+            
             It looks like this pull-request is has been made against the [${{ github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `${{ steps.checks.outputs.TARGET_BRANCH }}` branch.
             The `${{ steps.checks.outputs.TARGET_BRANCH }}` branch should always contain code from the `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}` branch.
             Because of this, PRs to `${{ steps.checks.outputs.TARGET_BRANCH }}` are only allowed if they come from the [${{ github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}` branch.
-            
-            ${{ steps.checks.outputs.LOGGER_ERROR }}
 
             You do not need to close this PR, you can change the target branch to `${{ steps.checks.outputs.RECOMMENDED_TARGET_BRANCH }}` by clicking the _"Edit"_ button at the top of this page.
             Note that even after this, the test will continue to show as failing until you push a new commit.
