@@ -28,7 +28,8 @@ jobs:
             recommended_target_branch=${incoming_branch_array["$incoming_branch"]}
             logger_error=""
             if [[ -z "$recommended_target_branch" ]]; then
-              logger_error="* :warning: The incoming branch (\`"${incoming_branch}"\`) does not match the naming conventions specified for local \`DEV\` branches. Please rename as \`DEV_${user_initials}\` (i.e \`DEV_BD\`)."
+              recommended_target_branch="DEV"
+              logger_error="> :warning: The incoming branch \`"${incoming_branch}"\` does not match the naming conventions specified for local \`DEV\` branches. Please rename as \`DEV_{user_initials}\` (i.e \`DEV_BD\`)."
             fi
 
             echo "::set-output name=INCOMING_BRANCH::$incoming_branch"
@@ -47,7 +48,9 @@ jobs:
         with:
           message: |
             ## This PR is against the `${{ steps.checks.outputs.TARGET_BRANCH }}` branch :x:
+            
             ${{ steps.checks.outputs.LOGGER_ERROR }}
+
             * Do not close this PR
             * Click _Edit_ and change the `base` to `${{ steps.checks.outputs.RECOMMENDED_TARGET_BRANCH }}`
             * This CI test will remain failed until you push a new commit
@@ -55,8 +58,6 @@ jobs:
             ---
 
             Hi @${{ github.event.pull_request.user.login }},
-
-            ${{ steps.checks.outputs.LOGGER_ERROR }}
             
             It looks like this pull-request is has been made against the [${{ github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `${{ steps.checks.outputs.TARGET_BRANCH }}` branch.
             The `${{ steps.checks.outputs.TARGET_BRANCH }}` branch should always contain code from the `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}` branch.
