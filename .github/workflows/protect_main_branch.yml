@@ -63,8 +63,7 @@ jobs:
             The `${{ steps.checks.outputs.TARGET_BRANCH }}` branch should always contain code from the `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}` branch.
             Because of this, PRs to `${{ steps.checks.outputs.TARGET_BRANCH }}` are only allowed if they come from the [${{ github.event.pull_request.head.repo.full_name }}](https://github.com/${{github.event.pull_request.head.repo.full_name }}) `${{ steps.checks.outputs.EXPECTED_INCOMING_BRANCH }}` branch.
 
-            You do not need to close this PR, you can change the target branch to `${{ steps.checks.outputs.RECOMMENDED_TARGET_BRANCH }}` by clicking the _"Edit"_ button at the top of this page.
-            Note that even after this, the test will continue to show as failing until you push a new commit.
+            You do not need to close this PR, you can change the target branch to `${{ steps.checks.outputs.RECOMMENDED_TARGET_BRANCH }}` by clicking the _"Edit"_ button at the top of this page. Note that even after this, the test will continue to show as failing until you push a new commit.
 
             Thanks again for your contribution!
         
