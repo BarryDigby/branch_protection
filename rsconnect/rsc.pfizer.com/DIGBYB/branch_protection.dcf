@@ -1,0 +1,12 @@
+name: branch_protection
+title: branch_protection
+username: DIGBYB
+account: DIGBYB
+server: rsc.pfizer.com
+hostUrl: https://rsc.pfizer.com/__api__
+appId: 8922
+bundleId: 54938
+url: https://rsc.pfizer.com/content/6b6f4458-a40e-44df-b48a-52bad1fbee97/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

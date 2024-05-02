@@ -37,4 +37,4 @@ jobs:
           api-key: ${{ secrets.CONNECT_API_KEY }}
           access-type: logged_in
           dir: |
-            .:/shiny-app-demo-cicd-github-actions
+            .:/branch_protection
