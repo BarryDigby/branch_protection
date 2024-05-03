@@ -1,3 +1,3 @@
 # branch_protection
 
-create a PR from QA -> main
+create a PR from QA -> main.
